@@ -1,0 +1,29 @@
+.form-horizontal{
+    display:block;
+    width:25%;
+    padding-top: 50px;
+    margin:0 auto;
+}
+
+.login-button {
+    width:100%;
+}
+
+.btn-primary {
+    background-color: red;
+    border-color: red;
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+    background-color: red;
+    border-color: red;
+}
+
+.btn-primary:hover {
+    background-color: red;
+    border-color: red;
+}
+
+.h1 {
+
+}
