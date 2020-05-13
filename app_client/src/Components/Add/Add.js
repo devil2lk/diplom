@@ -18,8 +18,7 @@ class Add extends Component{
             name: '',
             name_master: '',
             price: '',
-            serverOtvet: '',
-            button: '<button>Удалить</button>'
+            serverOtvet: ''
         }
     }
     handleChange = (e) => {

@@ -239,6 +239,150 @@ router.patch('/type_t/upgrade', function (req, res) {
   }
 });
 
+//создание клиента
+
+router.post('/client', function(req, res) {
+  let token = req.cookies;
+  if (token) {
+    let newClient = new Client({
+      last_name: req.body.last_name,
+      name: req.body.name,
+      middle_name: req.body.middle_name,
+      phone_number: req.body.phone_number,
+      e_mail: req.body.e_mail
+    });
+
+    newClient.save(function(err) {
+      if (err) {
+        return res.json({success: false, msg: 'Save Master failed.'});
+      }
+      res.json({success: true, msg: 'Successful created new Master.'});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+//получение списка клиентов
+
+router.get('/client', function(req, res) {
+  let token = req.cookies;
+  if (token) {
+    Client.find(function (err, Client) {
+      if (err) return next(err);
+      res.json(Client);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+//удаление клиента
+
+router.delete('/client/delete/:id', function (req, res) {
+  let mass = req.body.selected.split(',');
+  let token = req.cookies.Authorized;
+
+  if (token !== null) {
+    Client.deleteMany({
+      _id: mass
+    }, function (err) {
+      if (err) {
+        return res.json({success: false, msg: 'Delete client failed.'});
+      } else {
+        return res.json({success: true, msg: 'Successful Delete ' + req.params.id});
+      }
+    })
+  }
+});
+
+//изменение клиента
+
+router.patch('/client/upgrade', function (req, res) {
+  let token = req.cookies.Authorized;
+  if (token !== null){
+    Client.findById(req.body._id, (err, Client) => {
+      if(err){
+        return res.json({success: false, msg: 'Not found.'});
+      }
+      if(req.body.name){
+        Client.name = req.body.name;
+      }
+
+      Client.save((err, data) => {
+        if(err){
+          return res.json({success: false, msg: 'Update client failed.'});
+        }
+        return res.json({success: true, msg: 'Successful Update ' + data});
+      });
+
+    });
+  }
+});
+
+//получение списка мастеров
+
+router.get('/master', function(req, res) {
+  let token = req.cookies;
+  if (token) {
+    User.find(function (err, User) {
+      if (err) return next(err);
+      res.json(User);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+//удаление мастера
+
+router.delete('/master/delete/:id', function (req, res) {
+  let mass = req.body.selected.split(',');
+  let token = req.cookies.Authorized;
+
+  if (token !== null) {
+    User.deleteMany({
+      _id: mass
+    }, function (err) {
+      if (err) {
+        return res.json({success: false, msg: 'Delete User failed.'});
+      } else {
+        return res.json({success: true, msg: 'Successful Delete ' + req.params.id});
+      }
+    })
+  }
+});
+
+//изменение мастера
+
+router.patch('/master/upgrade', function (req, res) {
+  let token = req.cookies.Authorized;
+  if (token !== null){
+    User.findById(req.body._id, (err, User) => {
+      if(err){
+        return res.json({success: false, msg: 'Not found.'});
+      }
+      if(req.body.last_name){
+        User.last_name = req.body.last_name;
+      }
+      if(req.body.name){
+        User.name = req.body.name;
+      }
+      if(req.body.middle_name){
+        User.middle_name = req.body.middle_name;
+      }
+
+      User.save((err, data) => {
+        if(err){
+          return res.json({success: false, msg: 'Update User failed.'});
+        }
+        return res.json({success: true, msg: 'Successful Update ' + data});
+      });
+
+    });
+  }
+});
+
 //получение списков для селектов
 router.get('/type_t/list', function(req, res) {
   let token = req.cookies;
@@ -277,5 +421,29 @@ router.post('/type_t/list', function(req, res) {
   }
 });
 
+router.get('/type_t/text', function(req, res) {
+  let token = req.cookies.Authorized;
+  let mass = [];
+  if (token !== null) {
+    Technic.find({
+
+    },function (err, obj){
+      mass = obj;
+      for (let prop in mass){
+        Type_t.findById({
+          _id: mass[prop]['type_t']
+        },{
+          name: true,
+          _id: false
+        }, function (err, type_t) {
+          mass[prop]['type_t'] = type_t['name'];
+        })
+            .catch(err => res.json(err))
+      }
+    }).then(db => setTimeout(dt =>  res.json(mass),100));
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
 
 module.exports = router;

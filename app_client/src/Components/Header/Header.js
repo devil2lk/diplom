@@ -2,7 +2,6 @@ import {Link} from 'react-router-dom'
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap-grid.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import Type_technic from "../Type_technic/Type_technic";
 
 class Header extends Component{
 
@@ -28,13 +27,19 @@ class Header extends Component{
                         <div className="collapse navbar-collapse" id="navbarText">
                             <ul className="navbar-nav mr-auto">
                                 <li className="nav-item active">
-                                    <Link to='/Technic' className="nav-link">Список техники<span className="sr-only">(current)</span></Link>
+                                    <Link to='/technic' className="nav-link">Список техники<span className="sr-only">(current)</span></Link>
                                 </li>
                                 <li className="nav-item active">
-                                    <Link to='/Type_technic' className="nav-link">Список видов техники<span className="sr-only">(current)</span></Link>
+                                    <Link to='/type_technic' className="nav-link">Список видов техники<span className="sr-only">(current)</span></Link>
+                                </li>
+                                <li className="nav-item active">
+                                    <Link to='/client' className="nav-link">Список клиентов<span className="sr-only">(current)</span></Link>
+                                </li>
+                                <li className="nav-item active">
+                                    <Link to='/master' className="nav-link">Список мастеров<span className="sr-only">(current)</span></Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to='/Logout' className="nav-link">Выйти</Link>
+                                    <Link to='/logout' className="nav-link">Выйти</Link>
                                 </li>
                             </ul>
                         </div>
@@ -53,7 +58,7 @@ class Header extends Component{
                         <div className="collapse navbar-collapse" id="navbarText">
                             <ul className="navbar-nav mr-auto">
                                 <li className="nav-item">
-                                    <Link to='/Login' className="nav-link">Войти</Link>
+                                    <Link to='/login' className="nav-link">Войти</Link>
                                 </li>
                             </ul>
                         </div>

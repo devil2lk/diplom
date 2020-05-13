@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import './Technic.css';
 import '../../../node_modules/react-bootstrap-table/css/react-bootstrap-table.css'
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -21,7 +20,7 @@ const get_cookie = ( cookie_name ) =>
         return null;
 };
 
-class Technic extends Component{
+class Master extends Component{
 
 
     state = {
@@ -31,37 +30,33 @@ class Technic extends Component{
             dataField: '_id',
             isKey: true,
             hidden: true
-        }, {
-            dataField: 'type_t',
-            text: 'Вид техники',
+        },{
+            dataField: 'email',
+            text: 'E-mail',
             selected: false,
             editable: false
-        }, {
+        },{
+            dataField: 'password',
+            hidden: true
+        },{
+            dataField: 'last_name',
+            text: 'Фамилия',
+            selected: false
+        },{
             dataField: 'name',
-            text: 'Наименование',
+            text: 'Имя',
             selected: false,
 
         },{
-            dataField: 'maker',
-            text: 'Производитель',
+            dataField: 'middle_name',
+            text: 'Отчество',
             selected: false,
-        },
-            {
-                dataField: 'date_make',
-                text: 'Дата производства',
-                selected: false,
-            },
-            {
-                dataField: 'price',
-                text: 'Цена',
-                selected: false,
-            }
-        ],
+        }],
         selected: []
     };
 
     componentDidMount() {
-        fetch('/api/type_t/text').then(res => res.json())
+        fetch('/api/master').then(res => res.json())
             .then(data => this.setState({products: data}))
             .catch(err => console.log("err: =" + err));
     }
@@ -75,7 +70,7 @@ class Technic extends Component{
                 formBody.push(encodedKey + "=" + encodedValue);
             }
             formBody = formBody.join("&");
-            fetch('/api/technic/delete/'+this.state.selected, {
+            fetch('/api/master/delete/'+this.state.selected, {
                 method: 'delete',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -83,7 +78,7 @@ class Technic extends Component{
                 body:formBody
             }).then(res => res.json())
                 .then(data => this.setState({serverOtvet: data}))
-                .then(del =>  window.location.assign('http://localhost:3000/technic'));
+                .then(del =>  window.location.assign('http://localhost:3000/master'));
 
         }
 
@@ -146,15 +141,17 @@ class Technic extends Component{
             }
         };
 
+
+        console.log(this.state.products);
         if (get_cookie('Authorized') === null){
             window.location.assign('http://localhost:3000/login');
         } else {
             return (
                 <div>
-                    <h1 className="list_h1">Список техники</h1>
+                    <h1 className="list_h1">Список мастеров</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/add_technic'><button className="btn add-button">Добавить</button></Link>
+                            <Link to='/add_master'><button className="btn add-button">Добавить</button></Link>
                             <button className="btn delete-button" onClick={ this.handleGetSelectedData }>Удалить</button>
                         </div>
                         <div className="table">
@@ -182,4 +179,4 @@ class Technic extends Component{
     }
 }
 
-export default Technic;
+export default Master;

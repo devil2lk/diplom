@@ -41,7 +41,7 @@ class Login extends Component {
 
     render() {
         if (this.state.serverOtvet.success) {
-            window.location.assign('http://localhost:3000/List');
+            window.location.assign('http://localhost:3000/technic');
             } else {
                 return (
                     <div>
@@ -71,7 +71,7 @@ class Login extends Component {
 
                         <div className='text-center'>
                             Нет аккаунта?
-                            <Link to="/Register"> Зарегистрироваться</Link>
+                            <Link to="/register"> Зарегистрироваться</Link>
                         </div>
                     </div>
                 );

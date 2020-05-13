@@ -56,7 +56,7 @@ class Type_technic extends Component{
                 body:formBody
             }).then(res => res.json())
                 .then(data => this.setState({serverOtvet: data}))
-                .then(del =>  window.location.assign('http://localhost:3000/Type_technic'));
+                .then(del =>  window.location.assign('http://localhost:3000/type_technic'));
 
         }
 
@@ -122,14 +122,14 @@ class Type_technic extends Component{
 
         console.log(this.state.products);
         if (get_cookie('Authorized') === null){
-            window.location.assign('http://localhost:3000/Login');
+            window.location.assign('http://localhost:3000/login');
         } else {
             return (
                 <div>
                     <h1 className="list_h1">Список видов техники</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/Add_type_technic'><button className="btn add-button">Добавить</button></Link>
+                            <Link to='/add_type_technic'><button className="btn add-button">Добавить</button></Link>
                             <button className="btn delete-button" onClick={ this.handleGetSelectedData }>Удалить</button>
                         </div>
                         <div className="table">

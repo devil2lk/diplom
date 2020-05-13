@@ -88,40 +88,40 @@ class Add_technic extends Component{
                     </div>
                     <div>
                         <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                            <div className={`form-group input-group`}>
-                                <label htmlFor="type_t" className='col-sm-5'>Вид техники</label>
+                            <div className={`form-group`}>
+                                <label htmlFor="type_t">Вид техники</label>
                                 <Select
-                                    className='col-sm-7'
                                     placeholder="Выберите вид"
                                     value={selectedOption_type_t}
+                                    required={true}
                                     onChange={this.handleChange_type_t}
                                     options={this.state.type_t_list}
                                 />
                             </div>
-                            <div className={`form-group input-group`}>
-                                <label htmlFor="name" className='col-sm-5'>Наименование</label>
-                                <input type="text" required className="form-control col-sm-8" name="name"
+                            <div className={`form-group`}>
+                                <label htmlFor="name">Наименование</label>
+                                <input type="text" required className="form-control" name="name"
                                        placeholder=" Введите наименование"
                                        value={this.state.name}
                                        onChange={this.handleUserInput}/>
                             </div>
-                            <div className={`form-group input-group`}>
-                                <label htmlFor="maker" className='col-sm-5'>Производитель</label>
-                                <input type="text" required className="form-control col-sm-8" name="maker"
+                            <div className={`form-group`}>
+                                <label htmlFor="maker">Производитель</label>
+                                <input type="text" required className="form-control" name="maker"
                                        placeholder="Введите производителя"
                                        value={this.state.maker}
                                        onChange={this.handleUserInput}/>
                             </div>
-                            <div className={`form-group input-group`}>
-                                <label htmlFor="date_make" className='col-sm-5'>Дата производства</label>
-                                <input type="date" required className="form-control col-sm-8" name="date_make"
+                            <div className={`form-group`}>
+                                <label htmlFor="date_make">Дата производства</label>
+                                <input type="date" required className="form-control" name="date_make"
                                        placeholder="Введите дату производства"
                                        value={this.state.date_make}
                                        onChange={this.handleUserInput}/>
                             </div>
-                            <div className={`form-group input-group`}>
-                                <label htmlFor="price" className='col-sm-5'>Цена</label>
-                                <input type="number" required className="form-control col-sm-8" name="price"
+                            <div className={`form-group`}>
+                                <label htmlFor="price">Цена</label>
+                                <input type="number" required className="form-control" name="price"
                                        placeholder="Введите примерную цену техники"
                                        value={this.state.price}
                                        onChange={this.handleUserInput}/>

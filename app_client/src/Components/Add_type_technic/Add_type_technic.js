@@ -47,10 +47,10 @@ class Add_type_technic extends Component{
     };
     render() {
         if (get_cookie('Authorized') === null){
-            return <Redirect to="/Login"/>;
+            return <Redirect to="/login"/>;
         }else
         if (this.state.serverOtvet.success){
-            return (<Redirect to="/Type_technic"/>);
+            return (<Redirect to="/type_technic"/>);
         }else {
             return (
                 <div>
@@ -59,9 +59,9 @@ class Add_type_technic extends Component{
                     </div>
                     <div>
                         <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                            <div className={`form-group input-group`}>
-                                <label htmlFor="name" className='col-sm-5'>Наименование</label>
-                                <input type="text" required className="form-control col-sm-8" name="name"
+                            <div className={`form-group`}>
+                                <label htmlFor="name">Наименование</label>
+                                <input type="text" required className="form-control" name="name"
                                        placeholder=" Введите название вида"
                                        value={this.state.name}
                                        onChange={this.handleUserInput}/>

@@ -9,6 +9,9 @@ class Register extends Component {
         this.state = {
             email: '',
             password: '',
+            last_name: '',
+            name: '',
+            middle_name: '',
             formErrors: {email: '', password: ''},
             emailValid: false,
             passwordValid: false,
@@ -83,7 +86,7 @@ class Register extends Component {
 
     render() {
         if (this.state.serverOtvet.success) {
-            return <Redirect to='/Login'/>;
+            return <Redirect to='/login'/>;
         } else {
             return (
                 <div>
@@ -105,6 +108,27 @@ class Register extends Component {
                             <input type="password" className="form-control" name="password"
                                    placeholder="Введите пароль"
                                    value={this.state.password}
+                                   onChange={this.handleUserInput}/>
+                        </div>
+                        <div className={`form-group`}>
+                            <label htmlFor="last_name">Фамилия:</label>
+                            <input type="text" required className="form-control" name="last_name"
+                                   placeholder="Введите фамилию"
+                                   value={this.state.last_name}
+                                   onChange={this.handleUserInput}/>
+                        </div>
+                        <div className={`form-group`}>
+                            <label htmlFor="name">Имя:</label>
+                            <input type="text" required className="form-control" name="name"
+                                   placeholder="Введите имя"
+                                   value={this.state.name}
+                                   onChange={this.handleUserInput}/>
+                        </div>
+                        <div className={`form-group`}>
+                            <label htmlFor="middle_name">Отчество:</label>
+                            <input type="text" required className="form-control" name="middle_name"
+                                   placeholder="Введите отчество"
+                                   value={this.state.middle_name}
                                    onChange={this.handleUserInput}/>
                         </div>
                         <button type="submit" className="btn btn-primary register-button"
