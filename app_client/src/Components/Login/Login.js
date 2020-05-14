@@ -41,7 +41,9 @@ class Login extends Component {
 
     render() {
         if (this.state.serverOtvet.success) {
+            localStorage.setItem('fio', this.state.serverOtvet.user);
             window.location.assign('http://localhost:3000/technic');
+
             } else {
                 return (
                     <div>

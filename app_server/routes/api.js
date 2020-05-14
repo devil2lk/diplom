@@ -7,9 +7,10 @@ let User = require("../models/user");
 let Technic = require("../models/technic");
 let Client = require("../models/client");
 let Type_t = require("../models/type_t");
+let Price_list = require("../models/price_list");
+let Orders = require("../models/orders");
 
 router.post('/signup', function(req, res) {
-  console.log(req.body);
   if (!req.body.email || !req.body.password) {
     res.json({success: false, msg: 'Please pass email and password.'});
   } else {
@@ -50,8 +51,7 @@ router.post('/signin', function(req, res) {
           // return the information including token as JSON
           res.cookie('Authorized',token);
           res.cookie('id',user._id);
-          res.json({success: true, token: 'JWT ' + token});
-          console.log(req.cookies);
+          res.json({success: true, user: user.last_name+' '+user.name+' '+user.middle_name, token: 'JWT ' + token});
         } else {
           res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
         }
@@ -114,7 +114,7 @@ router.delete('/technic/delete/:id', function (req, res) {
             _id: mass
         }, function (err) {
             if (err) {
-                return res.json({success: false, msg: 'Delete Technic failed.'});
+                return res.json({success: false, msg: 'Delete Orders failed.'});
             } else {
                 return res.json({success: true, msg: 'Successful Delete ' + req.params.id});
             }
@@ -149,7 +149,7 @@ router.patch('/technic/upgrade', function (req, res) {
 
       Technic.save((err, data) => {
         if(err){
-          return res.json({success: false, msg: 'Update Technic failed.'});
+          return res.json({success: false, msg: 'Update Orders failed.'});
         }
         return res.json({success: true, msg: 'Successful Update ' + data});
       });
@@ -383,6 +383,158 @@ router.patch('/master/upgrade', function (req, res) {
   }
 });
 
+//создание услуги
+
+router.post('/price_list', function(req, res) {
+  let token = req.cookies;
+  if (token) {
+    let newPrice_list = new Price_list({
+      type_t: req.body.type_t,
+      name_service: req.body.name_service,
+      price: req.body.price
+    });
+    newPrice_list.save(function(err) {
+      if (err) {
+        return res.json({success: false, msg: 'Save Price_list failed.'});
+      }
+      res.json({success: true, msg: 'Successful created new Price_list.'});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+//получение списка услуг
+
+router.get('/price_list', function(req, res) {
+  let token = req.cookies;
+  if (token) {
+    Price_list.find(function (err, Price_list) {
+      if (err) return next(err);
+      res.json(Price_list);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+//удаление услуги
+
+router.delete('/price_list/delete/:id', function (req, res) {
+  let mass = req.body.selected.split(',');
+  let token = req.cookies.Authorized;
+
+  if (token !== null) {
+    Price_list.deleteMany({
+      _id: mass
+    }, function (err) {
+      if (err) {
+        return res.json({success: false, msg: 'Delete Price_list failed.'});
+      } else {
+        return res.json({success: true, msg: 'Successful Delete ' + req.params.id});
+      }
+    })
+  }
+});
+
+//изменение услуги
+
+router.patch('/price_list/upgrade', function (req, res) {
+  let token = req.cookies.Authorized;
+  if (token !== null){
+    Price_list.findById(req.body._id, (err, Price_list) => {
+      if(err){
+        return res.json({success: false, msg: 'Not found.'});
+      }
+      if(req.body.name_service){
+        Price_list.name_service = req.body.name_service;
+      }
+      if(req.body.price){
+        Price_list.price = req.body.price;
+      }
+
+      Price_list.save((err, data) => {
+        if(err){
+          return res.json({success: false, msg: 'Update Price_list failed.'});
+        }
+        return res.json({success: true, msg: 'Successful Update ' + data});
+      });
+
+    });
+  }
+});
+
+//создание заказа
+
+router.post('/orders', function(req, res) {
+  let token = req.cookies;
+  if (token) {
+    let newOrders = new Orders({
+      type_t: req.body.type_t,
+      name_service: req.body.name_service,
+      name: req.body.name,
+      fio_client: req.body.fio_client,
+      fio: req.body.fio,
+      price: req.body.price
+    });
+    newOrders.save(function(err) {
+      if (err) {
+        return res.json({success: false, msg: 'Save Orders failed.'});
+      }
+      res.json({success: true, msg: 'Successful created new Orders.'});
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+//получение списка заказов
+
+router.get('/orders', function(req, res) {
+  let token = req.cookies.Authorized;
+  let mass = [];
+  if (token !== null) {
+    Orders.find({
+
+    },function (err, obj){
+      mass = obj;
+      console.log(obj);
+      for (let prop in mass){
+        Type_t.findById({
+          _id: mass[prop]['type_t']
+        },{
+          name: true,
+          _id: false
+        }, function (err, type_t) {
+          mass[prop]['type_t'] = type_t['name'];
+        })
+            .catch(err => res.json(err))
+      }
+    }).then(db => setTimeout(dt =>  res.json(mass),100));
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+//удаление заказа
+
+router.delete('/orders/delete/:id', function (req, res) {
+  let mass = req.body.selected.split(',');
+  let token = req.cookies.Authorized;
+
+  if (token !== null) {
+    Orders.deleteMany({
+      _id: mass
+    }, function (err) {
+      if (err) {
+        return res.json({success: false, msg: 'Delete Orders failed.'});
+      } else {
+        return res.json({success: true, msg: 'Successful Delete ' + req.params.id});
+      }
+    })
+  }
+});
+
 //получение списков для селектов
 router.get('/type_t/list', function(req, res) {
   let token = req.cookies;
@@ -400,7 +552,55 @@ router.get('/type_t/list', function(req, res) {
   }
 });
 
-// получение _id
+router.get('/name_service/list', function(req, res) {
+  let token = req.cookies;
+  let list = [];
+  if (token !== null) {
+    Price_list.find({},{name_service: true, _id: false}, function (err, name_service){
+      if (err) return next(err);
+      for(let prop in name_service){
+        list.push({value: name_service[prop].name_service, label: name_service[prop].name_service})
+      }
+      res.json(list);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+router.get('/name/list', function(req, res) {
+  let token = req.cookies;
+  let list = [];
+  if (token !== null) {
+    Technic.find({},{name: true, _id: false}, function (err, type_t){
+      if (err) return next(err);
+      for(let prop in type_t){
+        list.push({value: type_t[prop].name, label: type_t[prop].name})
+      }
+      res.json(list);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+router.get('/fio_client/list', function(req, res) {
+  let token = req.cookies;
+  let list = [];
+  if (token !== null) {
+    Client.find({},{last_name: true, name: true, middle_name: true, _id: false}, function (err, fio_client){
+      if (err) return next(err);
+      for(let prop in fio_client){
+        list.push({value: fio_client[prop].last_name+" "+fio_client[prop].name+" "+fio_client[prop].middle_name, label: fio_client[prop].last_name+" "+fio_client[prop].name+" "+fio_client[prop].middle_name})
+      }
+      res.json(list);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+// получение _id type_t
 router.post('/type_t/list', function(req, res) {
   let token = req.cookies;
   let list = [];
@@ -421,11 +621,122 @@ router.post('/type_t/list', function(req, res) {
   }
 });
 
+// получение _id name_service
+
+router.post('/name_service/list', function(req, res) {
+  let token = req.cookies;
+  let list = [];
+  if (token !== null) {
+    Price_list.find({
+      name_service: req.body.name
+    },{
+      _id: true
+    }, function (err, name_service){
+      if (err) return next(err);
+      for(let prop in name_service){
+        list.push(name_service[prop]._id)
+      }
+      res.json(list);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+router.post('/name/list', function(req, res) {
+  let token = req.cookies;
+  let list = [];
+  if (token !== null) {
+    Technic.find({
+      name: req.body.name
+    },{
+      _id: true
+    }, function (err, name){
+      if (err) return next(err);
+      for(let prop in name){
+        list.push(name[prop]._id)
+      }
+      res.json(list);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+router.post('/fio_client/list', function(req, res) {
+  let token = req.cookies;
+  let list = [];
+  let fio = req.body.name.split(' ');
+  if (token !== null) {
+    Client.find({
+      last_name: fio[0],
+      name: fio[1],
+      middle_name: fio[2]
+    },{
+      _id: true
+    }, function (err, type_t){
+      if (err) return next(err);
+      for(let prop in type_t){
+        list.push(type_t[prop]._id)
+      }
+      res.json(list);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+router.post('/price/list', function(req, res) {
+  let token = req.cookies;
+  let list = [];
+  if (token !== null) {
+    Price_list.find({
+      _id: req.body._id
+    },{
+      _id: false,
+      price: true
+    }, function (err, name_service){
+      if (err) return next(err);
+      for(let prop in name_service){
+        list.push(name_service[prop].price)
+      }
+      res.json(list);
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
 router.get('/type_t/text', function(req, res) {
   let token = req.cookies.Authorized;
   let mass = [];
   if (token !== null) {
     Technic.find({
+
+    },function (err, obj){
+      mass = obj;
+      for (let prop in mass){
+        Type_t.findById({
+          _id: mass[prop]['type_t']
+        },{
+          name: true,
+          _id: false
+        }, function (err, type_t) {
+          mass[prop]['type_t'] = type_t['name'];
+        })
+            .catch(err => res.json(err))
+      }
+    }).then(db => setTimeout(dt =>  res.json(mass),100));
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+router.get('/price_list/text', function(req, res) {
+  let token = req.cookies.Authorized;
+  let mass = [];
+  if (token !== null) {
+    Price_list.find({
 
     },function (err, obj){
       mass = obj;

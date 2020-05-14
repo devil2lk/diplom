@@ -34,6 +34,7 @@ class Logout extends Component {
 
     render() {
         if (this.state.serverOtvet.success) {
+            localStorage.clear();
             this.delete_cookie('Authorized');
             window.location.assign('http://localhost:3000/');
         } else {
@@ -46,7 +47,7 @@ class Logout extends Component {
                                 <button type="button " className="flex-column btn btn-primary text-white btn-lg btn-block text-center btn-danger" onSubmit={this.handleSubmitLogout}>Да, выйти</button>
                             </div>
                             <div className='col-lg-5'>
-                                <Link  to='/List'><button type="button " className="flex-column btn btn-primary text-white btn-lg btn-block text-center btn-danger">Нет</button></Link>
+                                <Link  to='/'><button type="button " className="flex-column btn btn-primary text-white btn-lg btn-block text-center btn-danger">Нет</button></Link>
                             </div>
                         </div>
                     </div>

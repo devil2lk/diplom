@@ -1,7 +1,9 @@
 import {Link} from 'react-router-dom'
 import React, {Component} from 'react';
+import './Header.css';
 import 'bootstrap/dist/css/bootstrap-grid.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 
 class Header extends Component{
 
@@ -18,51 +20,44 @@ class Header extends Component{
         if (this.get_cookie('Authorized') !== null){
             return (
                 <div>
-                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                        <Link to='/' className="navbar-brand">Главная</Link>
-                        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-                                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-                        <div className="collapse navbar-collapse" id="navbarText">
-                            <ul className="navbar-nav mr-auto">
-                                <li className="nav-item active">
-                                    <Link to='/technic' className="nav-link">Список техники<span className="sr-only">(current)</span></Link>
-                                </li>
-                                <li className="nav-item active">
-                                    <Link to='/type_technic' className="nav-link">Список видов техники<span className="sr-only">(current)</span></Link>
-                                </li>
-                                <li className="nav-item active">
-                                    <Link to='/client' className="nav-link">Список клиентов<span className="sr-only">(current)</span></Link>
-                                </li>
-                                <li className="nav-item active">
-                                    <Link to='/master' className="nav-link">Список мастеров<span className="sr-only">(current)</span></Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link to='/logout' className="nav-link">Выйти</Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+                    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                        <Navbar.Brand><Link className="text-white" to='/'>Главная</Link></Navbar.Brand>
+                        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                        <Navbar.Collapse id="responsive-navbar-nav">
+                            <Nav className="mr-auto">
+                                <Nav.Link><Link className="text-white" to='/price_list'>Прайс-лист</Link></Nav.Link>
+                                <Nav.Link><Link className="text-white" to='/orders'>Заказы</Link></Nav.Link>
+                                <NavDropdown title="Техника" id="collasible-nav-dropdown">
+                                    <Nav.Link><Link className="text-dark" to='/technic'>Список техники</Link></Nav.Link>
+                                    <Nav.Link><Link className="text-dark" to='/type_technic'>Виды техники</Link></Nav.Link>
+                                </NavDropdown>
+                            </Nav>
+                            <Nav>
+                                <NavDropdown title={localStorage.getItem('fio')} id="collasible-nav-dropdown">
+                                    <Nav.Link><Link className="text-dark" to='/client'>Клиенты</Link></Nav.Link>
+                                    <Nav.Link><Link className="text-dark" to='/master'>Мастера</Link></Nav.Link>
+                                </NavDropdown>
+                                <Nav.Link><Link className="text-white" to='/logout'>Выйти</Link></Nav.Link>
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
                 </div>
             )
         } else {
             return (
                 <div>
-                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <Link to='/' className="navbar-brand">Главная</Link>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-                            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                        <div className="collapse navbar-collapse" id="navbarText">
-                            <ul className="navbar-nav mr-auto">
-                                <li className="nav-item">
-                                    <Link to='/login' className="nav-link">Войти</Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+                    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                        <Navbar.Brand href="/">Главная</Navbar.Brand>
+                        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                        <Navbar.Collapse id="responsive-navbar-nav">
+                            <Nav className="mr-auto">
+                                <Nav.Link><Link className="text-white" to='/price_list'>Прайс-лист</Link></Nav.Link>
+                            </Nav>
+                            <Nav>
+                                <Nav.Link><Link className="text-white" to='/login'>Войти</Link></Nav.Link>
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
                 </div>
             )
         }

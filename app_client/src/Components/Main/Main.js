@@ -12,6 +12,10 @@ import Client from "../Client/Client";
 import Add_client from "../Add_client/Add_client";
 import Master from "../Master/Master";
 import Add_master from "../Add_master/Add_master";
+import Price_list from "../Price_list/Price_list";
+import Add_price from "../Add_price/Add_price";
+import Orders from "../Orders/Orders";
+import Add_orders from "../Add_orders/Add_orders";
 
 
 
@@ -29,6 +33,10 @@ function Main() {
                     <Route path='/login' component={Login}/>
                     <Route path='/master' component={Master}/>
                     <Route path='/add_master' component={Add_master}/>
+                    <Route path='/price_list' component={Price_list}/>
+                    <Route path='/add_price' component={Add_price}/>
+                    <Route path='/orders' component={Orders}/>
+                    <Route path='/add_orders' component={Add_orders}/>
                     <Route path='/logout' component={Logout}/>
                     <Route path='/register' component={Register}/>
 

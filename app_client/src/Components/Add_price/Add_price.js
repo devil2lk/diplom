@@ -12,14 +12,12 @@ const get_cookie = ( cookie_name ) =>
         return null;
 };
 
-class Add_technic extends Component{
+class Add_price extends Component{
     constructor(props) {
         super(props);
         this.state= {
             type_t: '',
-            name: '',
-            maker: '',
-            date_make: '',
+            name_service: '',
             price: '',
             type_t_list: null,
             selectedOption_type_t: null,
@@ -58,7 +56,7 @@ class Add_technic extends Component{
             formBody.push(encodedKey + "=" + encodedValue);
         }
         formBody = formBody.join("&");
-        fetch('/api/technic', {
+        fetch('/api/price_list', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -79,7 +77,7 @@ class Add_technic extends Component{
             return <Redirect to="/login"/>;
         }else
         if (this.state.serverOtvet.success){
-            return (<Redirect to="/technic"/>);
+            return (<Redirect to="/price_list"/>);
         }else {
             return (
                 <div>
@@ -99,30 +97,16 @@ class Add_technic extends Component{
                                 />
                             </div>
                             <div className={`form-group`}>
-                                <label htmlFor="name">Наименование</label>
-                                <input type="text" required className="form-control" name="name"
+                                <label htmlFor="name_service">Наименование</label>
+                                <input type="text" required className="form-control" name="name_service"
                                        placeholder=" Введите наименование"
-                                       value={this.state.name}
+                                       value={this.state.name_service}
                                        onChange={this.handleUserInput}/>
                             </div>
                             <div className={`form-group`}>
-                                <label htmlFor="maker">Производитель</label>
-                                <input type="text" required className="form-control" name="maker"
-                                       placeholder="Введите производителя"
-                                       value={this.state.maker}
-                                       onChange={this.handleUserInput}/>
-                            </div>
-                            <div className={`form-group`}>
-                                <label htmlFor="date_make">Дата производства</label>
-                                <input type="date" required className="form-control" name="date_make"
-                                       placeholder="Введите дату производства"
-                                       value={this.state.date_make}
-                                       onChange={this.handleUserInput}/>
-                            </div>
-                            <div className={`form-group`}>
-                                <label htmlFor="price">Цена</label>
-                                <input type="number" required className="form-control" name="price"
-                                       placeholder="Введите примерную цену техники"
+                                <label htmlFor="price">Цена услуги</label>
+                                <input type="text" required className="form-control" name="price"
+                                       placeholder="Введите цену услуги"
                                        value={this.state.price}
                                        onChange={this.handleUserInput}/>
                             </div>
@@ -137,4 +121,4 @@ class Add_technic extends Component{
     }
 
 }
-export default Add_technic;
+export default Add_price;
