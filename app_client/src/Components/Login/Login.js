@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import './Login.css';
+import {Button} from "react-bootstrap";
 
 class Login extends Component {
     constructor(props) {
@@ -67,7 +68,7 @@ class Login extends Component {
                                            value={this.state.password}
                                            onChange={this.handleUserInput}/>
                                 </div>
-                                <input type="submit" className="btn btn-primary login-button" value='Войти'/>
+                                <input type="submit" className="btn btn-success login-button" value='Войти'/>
                             </form>
                         </div>
 

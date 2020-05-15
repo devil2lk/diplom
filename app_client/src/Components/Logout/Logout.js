@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
+import {Button} from "react-bootstrap";
 
 class Logout extends Component {
 
@@ -44,10 +45,11 @@ class Logout extends Component {
                         <h1>Вы действительно хотите выйти?</h1>
                         <div className='row'>
                             <div className='col-lg-5'>
-                                <button type="button " className="flex-column btn btn-primary text-white btn-lg btn-block text-center btn-danger" onSubmit={this.handleSubmitLogout}>Да, выйти</button>
+                                <Button onClick={this.handleSubmitLogout} className='flex-column btn btn-lg btn-block text-center' variant="success">Да, выйти</Button>
+                                {/*<button type="button " className="flex-column btn btn-primary text-white btn-lg btn-block text-center btn-danger" onSubmit={this.handleSubmitLogout}>Да, выйти</button>*/}
                             </div>
                             <div className='col-lg-5'>
-                                <Link  to='/'><button type="button " className="flex-column btn btn-primary text-white btn-lg btn-block text-center btn-danger">Нет</button></Link>
+                                <Link className="text-decoration-none" to='/'><Button className="flex-column btn-lg btn-block text-center" variant="dark">Нет</Button></Link>
                             </div>
                         </div>
                     </div>

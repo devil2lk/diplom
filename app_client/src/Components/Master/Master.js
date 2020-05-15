@@ -4,6 +4,7 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import {Link} from "react-router-dom";
+import {Button} from "react-bootstrap";
 
 // const regExpFIO = /^([А-ЯA-Z]|[А-ЯA-Z][\x27а-яa-z]{1,}|[А-ЯA-Z][\x27а-яa-z]{1,}-([А-ЯA-Z][\x27а-яa-z]{1,}|(оглы)|(кызы)))\040[А-ЯA-Z][\x27а-яa-z]{1,}(\040[А-ЯA-Z][\x27а-яa-z]{1,})?$/;
 // const regExpYsl = /^([a-zа-яё]+)$/i;
@@ -151,8 +152,8 @@ class Master extends Component{
                     <h1 className="list_h1">Список мастеров</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/add_master'><button className="btn add-button">Добавить</button></Link>
-                            <button className="btn delete-button" onClick={ this.handleGetSelectedData }>Удалить</button>
+                            <Link to='/add_master'><Button variant="success">Добавить</Button></Link>
+                            <Button onClick={ this.handleGetSelectedData } className='btn_close' variant="dark">Удалить</Button>
                         </div>
                         <div className="table">
                             <BootstrapTable

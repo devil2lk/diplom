@@ -16,6 +16,8 @@ import Price_list from "../Price_list/Price_list";
 import Add_price from "../Add_price/Add_price";
 import Orders from "../Orders/Orders";
 import Add_orders from "../Add_orders/Add_orders";
+import Eq_repair from "../Eq_repair/Eq_repair";
+import Eq_orders from "../Eq_orders/Eq_orders";
 
 
 
@@ -39,6 +41,8 @@ function Main() {
                     <Route path='/add_orders' component={Add_orders}/>
                     <Route path='/logout' component={Logout}/>
                     <Route path='/register' component={Register}/>
+                    <Route path='/invoice' component={Eq_repair}/>
+                    <Route path='/eq_orders' component={Eq_orders}/>
 
 
                 </Switch>

@@ -110,7 +110,7 @@ class Add_price extends Component{
                                        value={this.state.price}
                                        onChange={this.handleUserInput}/>
                             </div>
-                            <input type="submit" className="btn btn-primary btn-dark" onSubmit={this.handleSubmit}
+                            <input type="submit" className="btn btn-success" onSubmit={this.handleSubmit}
                                    value='Добавить'/>
                         </form>
                     </div>

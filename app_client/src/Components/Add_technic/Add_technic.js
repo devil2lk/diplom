@@ -79,7 +79,8 @@ class Add_technic extends Component{
             return <Redirect to="/login"/>;
         }else
         if (this.state.serverOtvet.success){
-            return (<Redirect to="/technic"/>);
+            localStorage.setItem('id_new_technic', this.state.serverOtvet._id);
+            return (<Redirect to="/invoice"/>);
         }else {
             return (
                 <div>
@@ -126,7 +127,7 @@ class Add_technic extends Component{
                                        value={this.state.price}
                                        onChange={this.handleUserInput}/>
                             </div>
-                            <input type="submit" className="btn btn-primary btn-dark" onSubmit={this.handleSubmit}
+                            <input type="submit" className="btn btn-success" onSubmit={this.handleSubmit}
                                    value='Добавить'/>
                         </form>
                     </div>

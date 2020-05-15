@@ -131,7 +131,7 @@ class Register extends Component {
                                    value={this.state.middle_name}
                                    onChange={this.handleUserInput}/>
                         </div>
-                        <button type="submit" className="btn btn-primary register-button"
+                        <button type="submit" className="btn btn-success register-button"
                                 disabled={!this.state.formValid} onSubmit={this.handleSubmit}>Зарегистрироваться
                         </button>
                     </form>

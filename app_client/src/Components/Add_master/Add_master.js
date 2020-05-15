@@ -96,7 +96,7 @@ class Add_master extends Component{
                                        value={this.state.middle_name}
                                        onChange={this.handleUserInput}/>
                             </div>
-                            <input type="submit" className="btn btn-primary btn-dark" onSubmit={this.handleSubmit}
+                            <input type="submit" className="btn btn-success" onSubmit={this.handleSubmit}
                                    value='Отправить'/>
                         </form>
                     </div>

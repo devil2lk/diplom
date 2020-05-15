@@ -66,7 +66,7 @@ class Add_type_technic extends Component{
                                        value={this.state.name}
                                        onChange={this.handleUserInput}/>
                             </div>
-                            <input type="submit" className="btn btn-primary btn-dark" onSubmit={this.handleSubmit}
+                            <input type="submit" className="btn btn-success" onSubmit={this.handleSubmit}
                                    value='Добавить'/>
                         </form>
                     </div>

@@ -82,7 +82,7 @@ router.post('/technic', function(req, res) {
       if (err) {
         return res.json({success: false, msg: 'Save technic failed.'});
       }
-      res.json({success: true, msg: 'Successful created new technic.'});
+      res.json({success: true, _id: newTechnic._id, msg: 'Successful created new technic.'});
     });
   } else {
     return res.status(403).send({success: false, msg: 'Unauthorized.'});
@@ -160,7 +160,81 @@ router.patch('/technic/upgrade', function (req, res) {
 
 });
 
+router.post('/invoice', function(req, res) {
+  let token = req.cookies.Authorized;
+  let mass = [];
+  if (token !== null) {
+    Technic.find({
+      _id: req.body.id_new_technic
+    },function (err, obj){
+      mass = obj;
+      for (let prop in mass){
+        Type_t.findById({
+          _id: mass[prop]['type_t']
+        },{
+          name: true,
+          _id: false
+        }, function (err, type_t) {
+          mass[prop]['type_t'] = type_t['name'];
+        })
+            .catch(err => res.json(err))
+      }
+    }).then(db => setTimeout(dt =>  res.json(mass),100));
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
 
+router.post('/eq_orders', function(req, res) {
+  let token = req.cookies.Authorized;
+  let mass = [];
+  if (token !== null) {
+    Orders.find({
+      _id: req.body.id_new_orders
+    },function (err, obj){
+      mass = obj;
+      for (let prop in mass){
+        Type_t.findById({
+          _id: mass[prop]['type_t']
+        },{
+          name: true,
+          _id: false
+        }, function (err, type_t) {
+          mass[prop]['type_t'] = type_t['name'];
+          Price_list.findById({
+            _id: mass[prop]['name_service']
+          }, {
+            name_service: true,
+            _id: false
+          }, function (err, name_service) {
+            mass[prop]['name_service'] = name_service['name_service'];
+            Technic.findById({
+              _id: mass[prop]['name']
+            }, {
+              name: true,
+              _id: false
+            }, function (err, name) {
+              mass[prop]['name'] = name['name'];
+              Client.findById({
+                _id: mass[prop]['fio_client']
+              }, {
+                last_name: true,
+                name: true,
+                middle_name: true,
+                _id: false
+              }, function (err, fio_client) {
+                mass[prop]['fio_client'] = fio_client['last_name']+' '+fio_client['name']+' '+fio_client['middle_name'];
+              })
+            })
+          })
+        })
+            .catch(err => res.json(err))
+      }
+    }).then(db => setTimeout(dt =>  res.json(mass),100));
+  } else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+  }
+});
 
 //создание типа техники
 
@@ -481,7 +555,7 @@ router.post('/orders', function(req, res) {
       if (err) {
         return res.json({success: false, msg: 'Save Orders failed.'});
       }
-      res.json({success: true, msg: 'Successful created new Orders.'});
+      res.json({success: true, _id: newOrders._id, msg: 'Successful created new Orders.'});
     });
   } else {
     return res.status(403).send({success: false, msg: 'Unauthorized.'});

@@ -96,7 +96,7 @@ class Add_client extends Component{
                                        value={this.state.e_mail}
                                        onChange={this.handleUserInput}/>
                             </div>
-                            <input type="submit" className="btn btn-primary btn-dark" onSubmit={this.handleSubmit}
+                            <input type="submit" className="btn btn-success" onSubmit={this.handleSubmit}
                                    value='Отправить'/>
                         </form>
                     </div>
