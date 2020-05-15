@@ -495,10 +495,8 @@ router.get('/orders', function(req, res) {
   let mass = [];
   if (token !== null) {
     Orders.find({
-
     },function (err, obj){
       mass = obj;
-      console.log(obj);
       for (let prop in mass){
         Type_t.findById({
           _id: mass[prop]['type_t']
@@ -507,6 +505,32 @@ router.get('/orders', function(req, res) {
           _id: false
         }, function (err, type_t) {
           mass[prop]['type_t'] = type_t['name'];
+          Price_list.findById({
+            _id: mass[prop]['name_service']
+          }, {
+            name_service: true,
+            _id: false
+          }, function (err, name_service) {
+            mass[prop]['name_service'] = name_service['name_service'];
+            Technic.findById({
+              _id: mass[prop]['name']
+            }, {
+              name: true,
+              _id: false
+            }, function (err, name) {
+              mass[prop]['name'] = name['name'];
+              Client.findById({
+                _id: mass[prop]['fio_client']
+              }, {
+                last_name: true,
+                name: true,
+                middle_name: true,
+                _id: false
+              }, function (err, fio_client) {
+                mass[prop]['fio_client'] = fio_client['last_name']+' '+fio_client['name']+' '+fio_client['middle_name'];
+              })
+            })
+              })
         })
             .catch(err => res.json(err))
       }

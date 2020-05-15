@@ -38,7 +38,7 @@ class Technic extends Component{
             editable: false
         }, {
             dataField: 'name',
-            text: 'Наименование',
+            text: 'Наименование ',
             selected: false,
 
         },{
