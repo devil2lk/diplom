@@ -379,8 +379,20 @@ router.patch('/client/upgrade', function (req, res) {
       if(err){
         return res.json({success: false, msg: 'Not found.'});
       }
+      if(req.body.last_name){
+        Client.last_name = req.body.last_name;
+      }
       if(req.body.name){
         Client.name = req.body.name;
+      }
+      if(req.body.middle_name){
+        Client.middle_name = req.body.middle_name;
+      }
+      if(req.body.phone_number){
+        Client.phone_number = req.body.phone_number;
+      }
+      if(req.body.e_mail){
+        Client.e_mail = req.body.e_mail;
       }
 
       Client.save((err, data) => {

@@ -21,15 +21,15 @@ class Header extends Component{
             return (
                 <div>
                     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                        <Navbar.Brand><Link className="text-white" to='/'>Главная</Link></Navbar.Brand>
+                        <Navbar.Brand><Link className="text-white" to='/'>ПочиниКА</Link></Navbar.Brand>
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="mr-auto">
-                                <Nav.Link><Link className="text-white" to='/price_list'>Прайс-лист</Link></Nav.Link>
+                                <Nav.Link><Link className="text-white" to='/price-list'>Прайс-лист</Link></Nav.Link>
                                 <Nav.Link><Link className="text-white" to='/orders'>Заказы</Link></Nav.Link>
                                 <NavDropdown title="Техника" id="collasible-nav-dropdown">
                                     <Nav.Link><Link className="text-dark" to='/technic'>Список техники</Link></Nav.Link>
-                                    <Nav.Link><Link className="text-dark" to='/type_technic'>Виды техники</Link></Nav.Link>
+                                    <Nav.Link><Link className="text-dark" to='/type-technic'>Виды техники</Link></Nav.Link>
                                 </NavDropdown>
                             </Nav>
                             <Nav>

@@ -6,9 +6,8 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import {Link} from "react-router-dom";
 import {Button} from "react-bootstrap";
 
-// const regExpFIO = /^([А-ЯA-Z]|[А-ЯA-Z][\x27а-яa-z]{1,}|[А-ЯA-Z][\x27а-яa-z]{1,}-([А-ЯA-Z][\x27а-яa-z]{1,}|(оглы)|(кызы)))\040[А-ЯA-Z][\x27а-яa-z]{1,}(\040[А-ЯA-Z][\x27а-яa-z]{1,})?$/;
-// const regExpYsl = /^([a-zа-яё]+)$/i;
-// const regExpPrice = /^\d+$/;
+const regExpName =/(^[А-ЯA-Z]{1} [а-яa-z]{1,}$)|(^[А-ЯA-Z]{1} [А-ЯA-Z]{1}[а-яa-z]{1,}$)|(^[А-ЯA-Z]{1}[а-яa-z]{1,} [А-ЯA-Z]{1}[а-яa-z]{1,}$)|(^[А-ЯA-Z]{1}[а-яa-z]{1,} [а-яa-z]{1,}$)/;
+const regExpPrice = /^\d+$/;
 let formBody = [];
 
 const get_cookie = ( cookie_name ) =>
@@ -40,11 +39,103 @@ class Price_list extends Component{
             dataField: 'name_service',
             text: 'Наименование услуги',
             selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpName.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'С заглавной буквы без цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'name_service'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/price_list/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/price-list/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
 
         },{
             dataField: 'price',
             text: 'Цена',
             selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpPrice.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'Без букв'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'price'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/price_list/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/price-list/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
         }],
         selected: []
     };
@@ -72,7 +163,7 @@ class Price_list extends Component{
                 body:formBody
             }).then(res => res.json())
                 .then(data => this.setState({serverOtvet: data}))
-                .then(del =>  window.location.assign('http://localhost:3000/price_list'));
+                .then(del =>  window.location.assign('http://localhost:3000/price-list'));
 
         }
 
@@ -161,7 +252,7 @@ class Price_list extends Component{
                     <h1 className="list_h1">Прайс-лист</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/add_price'><Button variant="success">Добавить</Button></Link>
+                            <Link to='/add-price'><Button variant="success">Добавить</Button></Link>
                             <Button onClick={ this.handleGetSelectedData } className='btn_close' variant="dark">Удалить</Button>
                         </div>
                         <div className="table">

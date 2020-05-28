@@ -162,7 +162,7 @@ class Orders extends Component{
                     <h1 className="list_h1">Список заказов</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/add_orders'><Button variant="success">Добавить</Button></Link>
+                            <Link to='/add-orders'><Button variant="success">Добавить</Button></Link>
                             <Button onClick={ this.handleGetSelectedData } className='btn_close' variant="dark">Удалить</Button>
                         </div>
                         <div className="table">

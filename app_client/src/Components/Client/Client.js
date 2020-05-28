@@ -6,9 +6,9 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import {Link} from "react-router-dom";
 import {Button} from "react-bootstrap";
 
-// const regExpFIO = /^([А-ЯA-Z]|[А-ЯA-Z][\x27а-яa-z]{1,}|[А-ЯA-Z][\x27а-яa-z]{1,}-([А-ЯA-Z][\x27а-яa-z]{1,}|(оглы)|(кызы)))\040[А-ЯA-Z][\x27а-яa-z]{1,}(\040[А-ЯA-Z][\x27а-яa-z]{1,})?$/;
-// const regExpYsl = /^([a-zа-яё]+)$/i;
-// const regExpPrice = /^\d+$/;
+const regExpFIO = /^[А-ЯA-Z]{1}[а-яa-zА-ЯA-Z]{1,}$/;
+const regExpNumber = /^\d[\d\(\)\ -]{4,14}\d$/;
+const regExpEmail = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
 let formBody = [];
 
 const get_cookie = ( cookie_name ) =>
@@ -34,26 +34,254 @@ class Client extends Component{
         }, {
             dataField: 'last_name',
             text: 'Фамилия',
-            selected: false
+            selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpFIO.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'С заглавной буквы без цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'last_name'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/client/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/client/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
         }, {
             dataField: 'name',
             text: 'Имя',
             selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpFIO.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'С заглавной буквы без цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'name'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/client/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/client/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
 
         },{
             dataField: 'middle_name',
             text: 'Отчество',
             selected: false,
-        },
-            {
+            validator: (newValue, row, column) => {
+                if (!regExpFIO.test(newValue)) {
+                    return {
+                        valid: false,
+                        message:  'С заглавной буквы без цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'middle_name'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/client/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/client/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
+        },{
                 dataField: 'phone_number',
                 text: 'Номер телефона',
                 selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpNumber.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'От 4 до 14 цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'phone_number'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/client/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/client/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
             },
-            {
+        },{
                 dataField: 'e_mail',
                 text: 'Адрес эл. почты',
                 selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpEmail.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'В формате электронной почты'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'e_mail'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/client/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/client/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
             }
         ],
         selected: []
@@ -155,7 +383,7 @@ class Client extends Component{
                     <h1 className="list_h1">Список клиентов</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/add_client'><Button variant="success">Добавить</Button></Link>
+                            <Link to='/add-client'><Button variant="success">Добавить</Button></Link>
                             <Button onClick={ this.handleGetSelectedData } className='btn_close' variant="dark">Удалить</Button>
                         </div>
                         <div className="table">

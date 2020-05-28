@@ -3,13 +3,13 @@ import './Technic.css';
 import '../../../node_modules/react-bootstrap-table/css/react-bootstrap-table.css'
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
+import cellEditFactory, {Type} from 'react-bootstrap-table2-editor';
 import {Link} from "react-router-dom";
 import {Button} from "react-bootstrap";
 
-// const regExpFIO = /^([А-ЯA-Z]|[А-ЯA-Z][\x27а-яa-z]{1,}|[А-ЯA-Z][\x27а-яa-z]{1,}-([А-ЯA-Z][\x27а-яa-z]{1,}|(оглы)|(кызы)))\040[А-ЯA-Z][\x27а-яa-z]{1,}(\040[А-ЯA-Z][\x27а-яa-z]{1,})?$/;
-// const regExpYsl = /^([a-zа-яё]+)$/i;
-// const regExpPrice = /^\d+$/;
+const regExpName =/(^[А-ЯA-Z]{1} [а-яa-z]{1,}$)|(^[А-ЯA-Z]{1} [А-ЯA-Z]{1}[а-яa-z]{1,}$)|(^[А-ЯA-Z]{1}[а-яa-z]{1,} [А-ЯA-Z]{1}[а-яa-z]{1,}$)|(^[А-ЯA-Z]{1}[а-яa-z]{1,} [а-яa-z]{1,}$)|(^[А-ЯA-Z]{1}[а-яa-z]{1,}$)/;
+const regExpPrice = /^\d+$/;
+
 let formBody = [];
 
 const get_cookie = ( cookie_name ) =>
@@ -41,21 +41,196 @@ class Technic extends Component{
             dataField: 'name',
             text: 'Наименование ',
             selected: false,
+            validator: (newValue, row, column) => {
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'name'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/technic/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/technic/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
 
         },{
             dataField: 'maker',
             text: 'Производитель',
             selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpName.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'С заглавной буквы без цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'maker'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/technic/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/technic/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
         },
             {
                 dataField: 'date_make',
                 text: 'Дата производства',
                 selected: false,
+                editor: {
+                    type: Type.DATE,
+                },
+                validator: (newValue, row, column) => {
+                    formBody = [];
+                    for (let prop in row) {
+                        if (prop === 'date_make'){
+                            if (prop === column.dataField){
+                                let encodedKey = encodeURIComponent(prop);
+                                let encodedValue = encodeURIComponent(newValue);
+                                formBody.push(encodedKey + "=" + encodedValue);
+                            }else {
+                                let encodedKey = encodeURIComponent(prop);
+                                let encodedValue = encodeURIComponent(row[prop]);
+                                formBody.push(encodedKey + "=" + encodedValue);
+                            }
+                        }
+                        if (prop === '_id'){
+                            if (prop === column.dataField){
+                                let encodedKey = encodeURIComponent(prop);
+                                let encodedValue = encodeURIComponent(newValue);
+                                formBody.push(encodedKey + "=" + encodedValue);
+                            }else {
+                                let encodedKey = encodeURIComponent(prop);
+                                let encodedValue = encodeURIComponent(row[prop]);
+                                formBody.push(encodedKey + "=" + encodedValue);
+                            }
+                        }
+
+                    }
+                    formBody = formBody.join("&");
+                    fetch('/api/technic/upgrade', {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body:formBody
+                    }).then(res => res.json())
+                        .then(data => this.setState({serverOtvet: data}))
+                        .then(db =>  window.location.assign('http://localhost:3000/technic/'))
+                        .catch(err => console.log("err: =" + err));
+
+                },
             },
             {
                 dataField: 'price',
                 text: 'Цена',
                 selected: false,
+                validator: (newValue, row, column) => {
+                    if (!regExpPrice.test(newValue)) {
+                        return {
+                            valid: false,
+                            message: 'Без букв'
+                        };
+                    }
+                    formBody = [];
+                    for (let prop in row) {
+                        if (prop === 'price'){
+                            if (prop === column.dataField){
+                                let encodedKey = encodeURIComponent(prop);
+                                let encodedValue = encodeURIComponent(newValue);
+                                formBody.push(encodedKey + "=" + encodedValue);
+                            }else {
+                                let encodedKey = encodeURIComponent(prop);
+                                let encodedValue = encodeURIComponent(row[prop]);
+                                formBody.push(encodedKey + "=" + encodedValue);
+                            }
+                        }
+                        if (prop === '_id'){
+                            if (prop === column.dataField){
+                                let encodedKey = encodeURIComponent(prop);
+                                let encodedValue = encodeURIComponent(newValue);
+                                formBody.push(encodedKey + "=" + encodedValue);
+                            }else {
+                                let encodedKey = encodeURIComponent(prop);
+                                let encodedValue = encodeURIComponent(row[prop]);
+                                formBody.push(encodedKey + "=" + encodedValue);
+                            }
+                        }
+
+                    }
+                    formBody = formBody.join("&");
+                    fetch('/api/technic/upgrade', {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body:formBody
+                    }).then(res => res.json())
+                        .then(data => this.setState({serverOtvet: data}))
+                        .then(db =>  window.location.assign('http://localhost:3000/technic/'))
+                        .catch(err => console.log("err: =" + err));
+                    return true;
+                },
             }
         ],
         selected: []
@@ -155,7 +330,7 @@ class Technic extends Component{
                     <h1 className="list_h1">Список техники</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/add_technic'><Button variant="success">Добавить</Button></Link>
+                            <Link to='/add-technic'><Button variant="success">Добавить</Button></Link>
                             <Button onClick={ this.handleGetSelectedData } className='btn_close' variant="dark">Удалить</Button>
                         </div>
                         <div className="table">

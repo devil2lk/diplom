@@ -95,7 +95,7 @@ class Eq_repair extends Component{
                                                     Дата: {`${today.getDate()}.${today.getMonth() + 1}.${today.getFullYear()}.`}
                                                 </td>
                                                 <td>
-                                                    Компания: АРОК.НЕТ
+                                                    Компания: ООО «ПочиниКА»
                                                 </td>
                                             </tr>
                                         </table>

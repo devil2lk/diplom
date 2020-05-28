@@ -27,22 +27,22 @@ function Main() {
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <Route path='/technic' component={Technic}/>
-                    <Route path='/add_technic' component={Add_technic}/>
-                    <Route path='/type_technic' component={Type_technic}/>
-                    <Route path='/add_type_technic' component={Add_type_technic}/>
+                    <Route path='/add-technic' component={Add_technic}/>
+                    <Route path='/type-technic' component={Type_technic}/>
+                    <Route path='/add-type-technic' component={Add_type_technic}/>
                     <Route path='/client' component={Client}/>
-                    <Route path='/add_client' component={Add_client}/>
+                    <Route path='/add-client' component={Add_client}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/master' component={Master}/>
-                    <Route path='/add_master' component={Add_master}/>
-                    <Route path='/price_list' component={Price_list}/>
-                    <Route path='/add_price' component={Add_price}/>
+                    <Route path='/add-master' component={Add_master}/>
+                    <Route path='/price-list' component={Price_list}/>
+                    <Route path='/add-price' component={Add_price}/>
                     <Route path='/orders' component={Orders}/>
-                    <Route path='/add_orders' component={Add_orders}/>
+                    <Route path='/add-orders' component={Add_orders}/>
                     <Route path='/logout' component={Logout}/>
                     <Route path='/register' component={Register}/>
                     <Route path='/invoice' component={Eq_repair}/>
-                    <Route path='/eq_orders' component={Eq_orders}/>
+                    <Route path='/eq-orders' component={Eq_orders}/>
 
 
                 </Switch>

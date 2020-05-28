@@ -82,7 +82,7 @@ class Add_price extends Component{
             return (
                 <div>
                     <div>
-                        <h1 className='text-center text-dark'>Добавление техники</h1>
+                        <h1 className='text-center text-dark'>Добавление услуги</h1>
                     </div>
                     <div>
                         <form className="form-horizontal" onSubmit={this.handleSubmit}>

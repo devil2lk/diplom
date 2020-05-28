@@ -6,9 +6,8 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import {Link} from "react-router-dom";
 import {Button} from "react-bootstrap";
 
-// const regExpFIO = /^([А-ЯA-Z]|[А-ЯA-Z][\x27а-яa-z]{1,}|[А-ЯA-Z][\x27а-яa-z]{1,}-([А-ЯA-Z][\x27а-яa-z]{1,}|(оглы)|(кызы)))\040[А-ЯA-Z][\x27а-яa-z]{1,}(\040[А-ЯA-Z][\x27а-яa-z]{1,})?$/;
-// const regExpYsl = /^([a-zа-яё]+)$/i;
-// const regExpPrice = /^\d+$/;
+const regExpFIO = /^[А-ЯA-Z]{1}[а-яa-zА-ЯA-Z]{1,}$/;
+
 let formBody = [];
 
 const get_cookie = ( cookie_name ) =>
@@ -42,16 +41,154 @@ class Master extends Component{
         },{
             dataField: 'last_name',
             text: 'Фамилия',
-            selected: false
+            selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpFIO.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'С заглавной буквы без цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'last_name'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/master/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/master/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
         },{
             dataField: 'name',
             text: 'Имя',
             selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpFIO.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'С заглавной буквы без цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'name'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/master/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/master/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
 
         },{
             dataField: 'middle_name',
             text: 'Отчество',
             selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpFIO.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'С заглавной буквы без цифр'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'middle_name'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/master/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/master/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
         }],
         selected: []
     };
@@ -152,7 +289,7 @@ class Master extends Component{
                     <h1 className="list_h1">Список мастеров</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/add_master'><Button variant="success">Добавить</Button></Link>
+                            <Link to='/add-master'><Button variant="success">Добавить</Button></Link>
                             <Button onClick={ this.handleGetSelectedData } className='btn_close' variant="dark">Удалить</Button>
                         </div>
                         <div className="table">

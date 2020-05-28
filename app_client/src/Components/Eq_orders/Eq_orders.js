@@ -95,7 +95,7 @@ class Eq_orders extends Component{
                                                     Дата: {`${today.getDate()}.${today.getMonth() + 1}.${today.getFullYear()}.`}
                                                 </td>
                                                 <td>
-                                                    Компания: АРОК.НЕТ
+                                                    Компания: ООО «ПочиниКА»
                                                 </td>
                                             </tr>
                                         </table>
@@ -105,6 +105,7 @@ class Eq_orders extends Component{
                                     <td colSpan="2">
                                         <table>
                                             <tr>
+
                                                 <td>
                                                     Исполнитель: {this.state.fio_master}
                                                 </td>

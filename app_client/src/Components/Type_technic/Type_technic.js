@@ -6,6 +6,8 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import {Link} from "react-router-dom";
 import {Button} from "react-bootstrap";
 
+const regExpName =/(^[А-ЯA-Z]{1} [а-яa-z]{1,}$)|(^[А-ЯA-Z]{1} [А-ЯA-Z]{1}[а-яa-z]{1,}$)|(^[А-ЯA-Z]{1}[а-яa-z]{1,} [А-ЯA-Z]{1}[а-яa-z]{1,}$)|(^[А-ЯA-Z]{1}[а-яa-z]{1,} [а-яa-z]{1,}$)|(^[А-ЯA-Z]{1}[а-яa-z]{1,}$)/;
+let formBody = [];
 const get_cookie = ( cookie_name ) =>
 {
     let results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
@@ -30,6 +32,52 @@ class Type_technic extends Component{
             dataField: 'name',
             text: 'Наименование вида',
             selected: false,
+            validator: (newValue, row, column) => {
+                if (!regExpName.test(newValue)) {
+                    return {
+                        valid: false,
+                        message: 'С заглавной буквы без цифр до 2-ух слов'
+                    };
+                }
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'name'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/type_t/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db =>  window.location.assign('http://localhost:3000/type-technic/'))
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
         }],
         selected: []
     };
@@ -57,7 +105,7 @@ class Type_technic extends Component{
                 body:formBody
             }).then(res => res.json())
                 .then(data => this.setState({serverOtvet: data}))
-                .then(del =>  window.location.assign('http://localhost:3000/type_technic'));
+                .then(del =>  window.location.assign('http://localhost:3000/type-technic'));
 
         }
 
@@ -130,7 +178,7 @@ class Type_technic extends Component{
                     <h1 className="list_h1">Список видов техники</h1>
                     <div>
                         <div className="buttons">
-                            <Link to='/add_type_technic'><Button variant="success">Добавить</Button></Link>
+                            <Link to='/add-type-technic'><Button variant="success">Добавить</Button></Link>
                             <Button onClick={ this.handleGetSelectedData } className='btn_close' variant="dark">Удалить</Button>
                         </div>
                         <div className="table">
