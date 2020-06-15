@@ -80,7 +80,7 @@ class Add_technic extends Component{
         }else
         if (this.state.serverOtvet.success){
             localStorage.setItem('id_new_technic', this.state.serverOtvet._id);
-            return (<Redirect to="/invoice"/>);
+            return (<Redirect to="/technic"/>);
         }else {
             return (
                 <div>

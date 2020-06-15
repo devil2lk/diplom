@@ -25,6 +25,10 @@ let OrdersSchema = new Schema({
     price: {
         type: Number,
         required: false
+    },
+    status: {
+        type: String,
+        required: false
     }
 });
 

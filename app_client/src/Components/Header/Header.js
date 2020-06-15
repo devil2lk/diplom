@@ -51,7 +51,7 @@ class Header extends Component{
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="mr-auto">
-                                <Nav.Link><Link className="text-white" to='/price_list'>Прайс-лист</Link></Nav.Link>
+                                <Nav.Link><Link className="text-white" to='/price-list'>Прайс-лист</Link></Nav.Link>
                             </Nav>
                             <Nav>
                                 <Nav.Link><Link className="text-white" to='/login'>Войти</Link></Nav.Link>

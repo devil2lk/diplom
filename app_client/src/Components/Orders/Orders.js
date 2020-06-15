@@ -3,7 +3,7 @@ import './Orders.css';
 import '../../../node_modules/react-bootstrap-table/css/react-bootstrap-table.css'
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
+import cellEditFactory, {Type} from 'react-bootstrap-table2-editor';
 import {Link} from "react-router-dom";
 import {Button} from "react-bootstrap";
 
@@ -28,6 +28,8 @@ class Orders extends Component{
     state = {
         serverOtvet: '',
         products: [],
+        textsend: '',
+        emailsend: '',
         columns: [{
             dataField: '_id',
             isKey: true,
@@ -63,7 +65,77 @@ class Orders extends Component{
             text: 'Цена',
             selected: false,
             editable: false
-            }
+        },{
+            dataField: 'status',
+            text: 'Статус',
+            selected: false,
+            editable: true,
+            editor: {
+                type: Type.SELECT,
+                options: [{
+                    value: 'Принято',
+                    label: 'Принято'
+                },{
+                    value: 'В работе',
+                    label: 'В работе'
+                },{
+                    value: 'Ожидает оплаты',
+                    label: 'Ожидает оплаты'
+                },{
+                    value: 'Завершено',
+                    label: 'Завершено'
+                },
+                ]
+            },
+            validator: (newValue, row, column) => {
+
+                formBody = [];
+                for (let prop in row) {
+                    if (prop === 'status'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+                    if (prop === '_id'){
+                        if (prop === column.dataField){
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(newValue);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }else {
+                            let encodedKey = encodeURIComponent(prop);
+                            let encodedValue = encodeURIComponent(row[prop]);
+                            formBody.push(encodedKey + "=" + encodedValue);
+                        }
+                    }
+
+                }
+                formBody = formBody.join("&");
+                fetch('/api/orders/upgrade', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body:formBody
+                }).then(res => res.json())
+                    .then(data => this.setState({serverOtvet: data}))
+                    .then(db => {
+                        if (newValue === 'Завершено'){
+                            //записать в локал
+                            window.location.assign('http://localhost:3000/invoice/');
+                        } else {
+                            window.location.assign('http://localhost:3000/orders/');
+                        }
+                    })
+                    .catch(err => console.log("err: =" + err));
+                return true;
+            },
+        }
         ],
         selected: []
     };

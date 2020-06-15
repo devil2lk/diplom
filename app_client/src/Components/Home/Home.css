@@ -1,10 +1,10 @@
-
-.Main1 p {
-    color: black;
-    padding-left: 3%;
-}
-
-.home_h1 {
+.list_h1 {
     padding-left: 2%;
     padding-top: 1%;
+}
+
+.div1 {
+    padding-left: 2%;
+    padding-top: 1%;
+    padding-bottom: 2%;
 }

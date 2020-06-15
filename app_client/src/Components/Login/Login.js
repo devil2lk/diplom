@@ -71,11 +71,6 @@ class Login extends Component {
                                 <input type="submit" className="btn btn-success login-button" value='Войти'/>
                             </form>
                         </div>
-
-                        <div className='text-center'>
-                            Нет аккаунта?
-                            <Link to="/register"> Зарегистрироваться</Link>
-                        </div>
                     </div>
                 );
             }

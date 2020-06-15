@@ -50,7 +50,7 @@ class Add_type_technic extends Component{
             return <Redirect to="/login"/>;
         }else
         if (this.state.serverOtvet.success){
-            return (<Redirect to="/type_technic"/>);
+            return (<Redirect to="/type-technic"/>);
         }else {
             return (
                 <div>

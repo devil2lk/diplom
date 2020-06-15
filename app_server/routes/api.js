@@ -9,10 +9,31 @@ let Client = require("../models/client");
 let Type_t = require("../models/type_t");
 let Price_list = require("../models/price_list");
 let Orders = require("../models/orders");
+let nodemailer = require('nodemailer');
+
+
+//отправка на почту при добавлении заказа
+router.post('/email', async function (req, res) {
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'pochinika.noreply@gmail.com',
+      pass: '1Qweasdzxc_'
+    }
+  });
+  let result = await transporter.sendMail({
+    to: req.body.emailsend,
+    subject: "ООО \"ПочиниКА\"",
+    text: req.body.textsend
+  })
+      .then(otvet => {
+          return res.json({success: true, msg: 'Сообщение отправлено'});
+      })
+})
 
 router.post('/signup', function(req, res) {
   if (!req.body.email || !req.body.password) {
-    res.json({success: false, msg: 'Please pass email and password.'});
+    res.json({success: false, msg: 'Пожалуйста введите е-mail и пароль'});
   } else {
     let newUser = new User({
       email: req.body.email,
@@ -20,14 +41,12 @@ router.post('/signup', function(req, res) {
       last_name: req.body.last_name,
       name: req.body.name,
       middle_name: req.body.middle_name
-
     });
-    // save the user
     newUser.save(function(err) {
       if (err) {
-        return res.json({success: false, msg: 'email already exists.'});
+        return res.json({success: false, msg: 'Email уже зарегистрирован'});
       }
-      res.json({success: true, msg: 'Successful created new user.'});
+      return res.json({success: true, msg: 'Успешная регистрация'});
     });
   }
 });
@@ -39,7 +58,7 @@ router.post('/signin', function(req, res) {
     if (err) throw err;
 
     if (!user) {
-      res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
+      res.status(401).send({success: false, msg: 'Пользователь не найден'});
     } else {
       // check if password matches
       user.comparePassword(req.body.password, function (err, isMatch) {
@@ -53,7 +72,7 @@ router.post('/signin', function(req, res) {
           res.cookie('id',user._id);
           res.json({success: true, user: user.last_name+' '+user.name+' '+user.middle_name, token: 'JWT ' + token});
         } else {
-          res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+          res.status(401).send({success: false, msg: 'Неправильный пароль'});
         }
       });
     }
@@ -66,7 +85,6 @@ router.get('/signout', function(req, res) {
 });
 
 //создание техники
-
 router.post('/technic', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -90,9 +108,8 @@ router.post('/technic', function(req, res) {
 });
 
 //получение списка техники
-
 router.get('/technic', function(req, res) {
-  let token = req.cookies;
+  let token = req.cookies.Authorized;
   if (token) {
     Technic.find(function (err, Technic) {
       if (err) return next(err);
@@ -104,7 +121,6 @@ router.get('/technic', function(req, res) {
 });
 
 //удаление техники
-
 router.delete('/technic/delete/:id', function (req, res) {
     let mass = req.body.selected.split(',');
     let token = req.cookies.Authorized;
@@ -114,7 +130,7 @@ router.delete('/technic/delete/:id', function (req, res) {
             _id: mass
         }, function (err) {
             if (err) {
-                return res.json({success: false, msg: 'Delete Orders failed.'});
+                return res.json({success: false, msg: 'Delete technic failed.'});
             } else {
                 return res.json({success: true, msg: 'Successful Delete ' + req.params.id});
             }
@@ -122,8 +138,7 @@ router.delete('/technic/delete/:id', function (req, res) {
     }
 });
 
-//изменение
-
+//изменение техники
 router.patch('/technic/upgrade', function (req, res) {
   let token = req.cookies.Authorized;
   if (token !== null){
@@ -160,12 +175,13 @@ router.patch('/technic/upgrade', function (req, res) {
 
 });
 
+//создание чека
 router.post('/invoice', function(req, res) {
   let token = req.cookies.Authorized;
   let mass = [];
   if (token !== null) {
-    Technic.find({
-      _id: req.body.id_new_technic
+    Orders.find({
+      _id: req.body.id_new_orders
     },function (err, obj){
       mass = obj;
       for (let prop in mass){
@@ -176,6 +192,32 @@ router.post('/invoice', function(req, res) {
           _id: false
         }, function (err, type_t) {
           mass[prop]['type_t'] = type_t['name'];
+          Price_list.findById({
+            _id: mass[prop]['name_service']
+          }, {
+            name_service: true,
+            _id: false
+          }, function (err, name_service) {
+            mass[prop]['name_service'] = name_service['name_service'];
+            Technic.findById({
+              _id: mass[prop]['name']
+            }, {
+              name: true,
+              _id: false
+            }, function (err, name) {
+              mass[prop]['name'] = name['name'];
+              Client.findById({
+                _id: mass[prop]['fio_client']
+              }, {
+                last_name: true,
+                name: true,
+                middle_name: true,
+                _id: false
+              }, function (err, fio_client) {
+                mass[prop]['fio_client'] = fio_client['last_name']+' '+fio_client['name']+' '+fio_client['middle_name'];
+              })
+            })
+          })
         })
             .catch(err => res.json(err))
       }
@@ -185,6 +227,8 @@ router.post('/invoice', function(req, res) {
   }
 });
 
+
+//создание документа о принятии в ремонт
 router.post('/eq_orders', function(req, res) {
   let token = req.cookies.Authorized;
   let mass = [];
@@ -237,7 +281,6 @@ router.post('/eq_orders', function(req, res) {
 });
 
 //создание типа техники
-
 router.post('/type_t', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -257,7 +300,6 @@ router.post('/type_t', function(req, res) {
 });
 
 //получение списка типов техники
-
 router.get('/type_t', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -271,7 +313,6 @@ router.get('/type_t', function(req, res) {
 });
 
 //удаление типа техники
-
 router.delete('/type_t/delete/:id', function (req, res) {
   let mass = req.body.selected.split(',');
   let token = req.cookies.Authorized;
@@ -290,7 +331,6 @@ router.delete('/type_t/delete/:id', function (req, res) {
 });
 
 //изменение типа техники
-
 router.patch('/type_t/upgrade', function (req, res) {
   let token = req.cookies.Authorized;
   if (token !== null){
@@ -314,7 +354,6 @@ router.patch('/type_t/upgrade', function (req, res) {
 });
 
 //создание клиента
-
 router.post('/client', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -338,7 +377,6 @@ router.post('/client', function(req, res) {
 });
 
 //получение списка клиентов
-
 router.get('/client', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -352,7 +390,6 @@ router.get('/client', function(req, res) {
 });
 
 //удаление клиента
-
 router.delete('/client/delete/:id', function (req, res) {
   let mass = req.body.selected.split(',');
   let token = req.cookies.Authorized;
@@ -371,7 +408,6 @@ router.delete('/client/delete/:id', function (req, res) {
 });
 
 //изменение клиента
-
 router.patch('/client/upgrade', function (req, res) {
   let token = req.cookies.Authorized;
   if (token !== null){
@@ -407,7 +443,6 @@ router.patch('/client/upgrade', function (req, res) {
 });
 
 //получение списка мастеров
-
 router.get('/master', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -421,7 +456,6 @@ router.get('/master', function(req, res) {
 });
 
 //удаление мастера
-
 router.delete('/master/delete/:id', function (req, res) {
   let mass = req.body.selected.split(',');
   let token = req.cookies.Authorized;
@@ -440,7 +474,6 @@ router.delete('/master/delete/:id', function (req, res) {
 });
 
 //изменение мастера
-
 router.patch('/master/upgrade', function (req, res) {
   let token = req.cookies.Authorized;
   if (token !== null){
@@ -470,7 +503,6 @@ router.patch('/master/upgrade', function (req, res) {
 });
 
 //создание услуги
-
 router.post('/price_list', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -491,7 +523,6 @@ router.post('/price_list', function(req, res) {
 });
 
 //получение списка услуг
-
 router.get('/price_list', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -505,7 +536,6 @@ router.get('/price_list', function(req, res) {
 });
 
 //удаление услуги
-
 router.delete('/price_list/delete/:id', function (req, res) {
   let mass = req.body.selected.split(',');
   let token = req.cookies.Authorized;
@@ -524,7 +554,6 @@ router.delete('/price_list/delete/:id', function (req, res) {
 });
 
 //изменение услуги
-
 router.patch('/price_list/upgrade', function (req, res) {
   let token = req.cookies.Authorized;
   if (token !== null){
@@ -551,7 +580,6 @@ router.patch('/price_list/upgrade', function (req, res) {
 });
 
 //создание заказа
-
 router.post('/orders', function(req, res) {
   let token = req.cookies;
   if (token) {
@@ -561,7 +589,8 @@ router.post('/orders', function(req, res) {
       name: req.body.name,
       fio_client: req.body.fio_client,
       fio: req.body.fio,
-      price: req.body.price
+      price: req.body.price,
+      status: 'Принято'
     });
     newOrders.save(function(err) {
       if (err) {
@@ -575,7 +604,6 @@ router.post('/orders', function(req, res) {
 });
 
 //получение списка заказов
-
 router.get('/orders', function(req, res) {
   let token = req.cookies.Authorized;
   let mass = [];
@@ -627,7 +655,6 @@ router.get('/orders', function(req, res) {
 });
 
 //удаление заказа
-
 router.delete('/orders/delete/:id', function (req, res) {
   let mass = req.body.selected.split(',');
   let token = req.cookies.Authorized;
@@ -643,6 +670,62 @@ router.delete('/orders/delete/:id', function (req, res) {
       }
     })
   }
+});
+
+//изменение заказа
+router.patch('/orders/upgrade', function (req, res) {
+  let token = req.cookies.Authorized;
+  if (token !== null){
+    let fio_cl, emailsend, textsend;
+    Orders.findById(req.body._id, (err, orders) => {
+      Client.findById({
+        _id: orders.fio_client
+      }, {
+        e_mail: true,
+        last_name: true,
+        name: true,
+        middle_name: true,
+        _id: false
+      }, function (err, fio_client) {
+       fio_cl = fio_client['last_name']+' '+fio_client['name']+' '+fio_client['middle_name'];
+       emailsend = fio_client['e_mail'];
+       textsend = 'Уважаемый '+fio_cl+", \n статус Вашего заказа изменился на "+"«"+req.body.status+"»";
+      })
+          .then(qwe => {
+            let transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'pochinika.noreply@gmail.com',
+                pass: '1Qweasdzxc_'
+              }
+            });
+            transporter.sendMail({
+              to: emailsend,
+              subject: "ООО \"ПочиниКА\"",
+              text: textsend
+            })
+                .then(we => {
+                  Orders.findById(req.body._id, (err, Orders) => {
+                    if(err){
+                      return res.json({success: false, msg: 'Not found.'});
+                    }
+                    if(req.body.status){
+                      Orders.status = req.body.status;
+                    }
+
+                    Orders.save((err, data) => {
+                      if(err){
+                        return res.json({success: false, msg: 'Update status failed.'});
+                      }
+                      return res.json({success: true, msg: 'Successful Update ' + data});
+                    });
+                  });
+                })
+            })
+    });
+  }
+
+
 });
 
 //получение списков для селектов
@@ -783,11 +866,12 @@ router.post('/fio_client/list', function(req, res) {
       name: fio[1],
       middle_name: fio[2]
     },{
+      e_mail: true,
       _id: true
     }, function (err, type_t){
       if (err) return next(err);
       for(let prop in type_t){
-        list.push(type_t[prop]._id)
+        list.push({fio_client:type_t[prop]._id, emailclient:type_t[prop].e_mail})
       }
       res.json(list);
     });

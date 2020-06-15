@@ -40,7 +40,6 @@ function Main() {
                     <Route path='/orders' component={Orders}/>
                     <Route path='/add-orders' component={Add_orders}/>
                     <Route path='/logout' component={Logout}/>
-                    <Route path='/register' component={Register}/>
                     <Route path='/invoice' component={Eq_repair}/>
                     <Route path='/eq-orders' component={Eq_orders}/>
 

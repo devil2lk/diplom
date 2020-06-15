@@ -16,7 +16,8 @@ class Eq_repair extends Component{
         super(props);
         this.state= {
             fio_master: localStorage.getItem('fio'),
-            id_new_technic: localStorage.getItem('id_new_technic'),
+            id_new_orders: localStorage.getItem('id_new_orders'),
+            fio_client: '',
             products: [],
             columns: [{
                 dataField: '_id',
@@ -26,18 +27,16 @@ class Eq_repair extends Component{
                 dataField: 'type_t',
                 text: 'Вид техники',
             }, {
-                dataField: 'name',
-                text: 'Наименование ',
+                dataField: 'name_service',
+                text: 'Наименование услуги',
 
             },{
-                dataField: 'maker',
-                text: 'Производитель',
+                dataField: 'name',
+                text: 'Наименование техники',
+
             },{
-                dataField: 'date_make',
-                text: 'Дата производства',
-            },{
-                    dataField: 'price',
-                    text: 'Цена',
+                dataField: 'price',
+                text: 'Цена',
             }],
         }
     }
@@ -48,15 +47,15 @@ class Eq_repair extends Component{
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF();
                 pdf.addImage(imgData, 'JPEG', 0, 0);
-                pdf.save("накладная.pdf");
-                localStorage.removeItem('id_new_technic');
-                window.location.assign('http://localhost:3000/technic/');
+                pdf.save("document_out.pdf");
+                localStorage.removeItem('id_new_orders');
+                window.location.assign('http://localhost:3000/orders/');
             })
         ;
     }
 
     handleRedirect() {
-        window.location.assign('http://localhost:3000/technic/');
+        window.location.assign('http://localhost:3000/orders/');
     }
     componentDidMount() {
         let formBody = [];
@@ -73,7 +72,8 @@ class Eq_repair extends Component{
             },
             body: formBody
         }).then(res => res.json())
-            .then(data => this.setState({products: data}));
+            .then(data => this.setState({products: data}))
+            .then(data => this.setState({fio_client: this.state.products[0].fio_client}))
     };
 
     render() {
@@ -105,11 +105,17 @@ class Eq_repair extends Component{
                                     <td colSpan="2">
                                         <table>
                                             <tr>
+
                                                 <td>
                                                     Исполнитель: {this.state.fio_master}
                                                 </td>
                                                 <td>
-                                                    Номер: {this.state.id_new_technic}
+                                                    Номер: {this.state.id_new_orders}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Заказчик: {this.state.fio_client}
                                                 </td>
                                             </tr>
                                         </table>

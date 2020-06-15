@@ -22,6 +22,8 @@ class Add_orders extends Component{
             fio_client: '',
             fio: localStorage.getItem("fio"),
             price: '',
+            emailsend: '',
+            textsend: '',
             type_t_list: null,
             selectedOption_type_t: null,
             name_service_list: null,
@@ -126,7 +128,11 @@ class Add_orders extends Component{
             },
             body: formBody
         }).then(res => res.json())
-            .then(data => this.setState({fio_client: data}))
+            .then(data => {
+                this.setState({fio_client: data[0].fio_client});
+                this.setState({emailsend: data[0].emailclient});
+                this.setState({textsend: 'Уважаемый '+selectedOption_fio_client.value+", \n Ваша техника принята в ремонт"})
+            })
             .catch(err => console.log("err: =" + err));
     };
     handleSubmit = (e) =>{
@@ -178,7 +184,23 @@ class Add_orders extends Component{
         }else
         if (this.state.serverOtvet.success){
             localStorage.setItem('id_new_orders', this.state.serverOtvet._id);
-            return (<Redirect to="/eq_orders"/>);
+            let formBody = [];
+            for (let prop in this.state) {
+                let encodedKey = encodeURIComponent(prop);
+                let encodedValue = encodeURIComponent(this.state[prop]);
+                formBody.push(encodedKey + "=" + encodedValue);
+            }
+            formBody = formBody.join("&");
+            fetch('/api/email', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formBody
+            }).then(res => res.json())
+                .then(data => this.setState({serverOtvet: data}))
+                .catch(err => console.log("err: =" + err));
+            return (<Redirect to="/eq-orders"/>);
         }else {
             return (
                 <div>

@@ -47,7 +47,7 @@ class Eq_orders extends Component{
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF();
                 pdf.addImage(imgData, 'JPEG', 0, 0);
-                pdf.save("чек.pdf");
+                pdf.save("document_in.pdf");
                 localStorage.removeItem('id_new_orders');
                 window.location.assign('http://localhost:3000/orders/');
             })
@@ -122,6 +122,7 @@ class Eq_orders extends Component{
                                     </td>
                                 </tr>
                             </table>
+                                    <p>Ваша техника принята в ремонт.</p>
                         </div>
                     </div>
                     <div>

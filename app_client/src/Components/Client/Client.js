@@ -372,9 +372,6 @@ class Client extends Component{
                 return {};
             }
         };
-
-
-        console.log(this.state.products);
         if (get_cookie('Authorized') === null){
             window.location.assign('http://localhost:3000/login');
         } else {
@@ -395,7 +392,6 @@ class Client extends Component{
                                 cellEdit={
                                     cellEditFactory({
                                         mode: 'dbclick',
-                                        // beforeSaveCell,
                                         blurToSave: true,
                                     })
                                 }
