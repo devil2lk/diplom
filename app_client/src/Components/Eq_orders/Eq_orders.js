@@ -49,12 +49,14 @@ class Eq_orders extends Component{
                 pdf.addImage(imgData, 'JPEG', 0, 0);
                 pdf.save("document_in.pdf");
                 localStorage.removeItem('id_new_orders');
+
                 window.location.assign('http://localhost:3000/orders/');
             })
         ;
     }
 
     handleRedirect() {
+        localStorage.removeItem('id_new_orders');
         window.location.assign('http://localhost:3000/orders/');
     }
     componentDidMount() {

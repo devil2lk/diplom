@@ -49,12 +49,24 @@ class Eq_repair extends Component{
                 pdf.addImage(imgData, 'JPEG', 0, 0);
                 pdf.save("document_out.pdf");
                 localStorage.removeItem('id_new_orders');
+                localStorage.removeItem('type_t');
+                localStorage.removeItem('name');
+                localStorage.removeItem('name_service');
+                localStorage.removeItem('fio_client');
+                localStorage.removeItem('price');
+
                 window.location.assign('http://localhost:3000/orders/');
             })
         ;
     }
 
     handleRedirect() {
+        localStorage.removeItem('id_new_orders');
+        localStorage.removeItem('type_t');
+        localStorage.removeItem('name');
+        localStorage.removeItem('name_service');
+        localStorage.removeItem('fio_client');
+        localStorage.removeItem('price');
         window.location.assign('http://localhost:3000/orders/');
     }
     componentDidMount() {

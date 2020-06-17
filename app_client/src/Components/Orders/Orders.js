@@ -127,6 +127,13 @@ class Orders extends Component{
                     .then(db => {
                         if (newValue === 'Завершено'){
                             //записать в локал
+                            console.log(this.state.serverOtvet);
+                            localStorage.setItem('type_t', this.state.serverOtvet.type_t);
+                            localStorage.setItem('name', this.state.serverOtvet.name);
+                            localStorage.setItem('name_service', this.state.serverOtvet.name_service);
+                            localStorage.setItem('fio_client', this.state.serverOtvet.fio_client);
+                            localStorage.setItem('price', this.state.serverOtvet.price);
+                            localStorage.setItem('id_new_orders', this.state.serverOtvet.id_new_orders);
                             window.location.assign('http://localhost:3000/invoice/');
                         } else {
                             window.location.assign('http://localhost:3000/orders/');

@@ -705,19 +705,60 @@ router.patch('/orders/upgrade', function (req, res) {
               text: textsend
             })
                 .then(we => {
-                  Orders.findById(req.body._id, (err, Orders) => {
+                  Orders.findById(req.body._id, (err, Orders_f) => {
                     if(err){
                       return res.json({success: false, msg: 'Not found.'});
                     }
                     if(req.body.status){
-                      Orders.status = req.body.status;
+                      Orders_f.status = req.body.status;
                     }
 
-                    Orders.save((err, data) => {
+                    Orders_f.save((err, data) => {
                       if(err){
                         return res.json({success: false, msg: 'Update status failed.'});
                       }
-                      return res.json({success: true, msg: 'Successful Update ' + data});
+                      Orders.findById(req.body._id, (err, Orders) => {
+                        let mass = Orders;
+                          Type_t.findById({
+                            _id: mass['type_t']
+                          }, {
+                            name: true,
+                            _id: false
+                          }, function (err, type_t) {
+                            mass['type_t'] = type_t['name'];
+                            Price_list.findById({
+                              _id: mass['name_service']
+                            }, {
+                              name_service: true,
+                              _id: false
+                            }, function (err, name_service) {
+                              console.log(name_service);
+                              mass['name_service'] = name_service['name_service'];
+                              Technic.findById({
+                                _id: mass['name']
+                              }, {
+                                name: true,
+                                _id: false
+                              }, function (err, name) {
+                                mass['name'] = name['name'];
+                                Client.findById({
+                                  _id: mass['fio_client']
+                                }, {
+                                  last_name: true,
+                                  name: true,
+                                  middle_name: true,
+                                  _id: false
+                                }, function (err, fio_client) {
+                                  mass['fio_client'] = fio_client['last_name'] + ' ' + fio_client['name'] + ' ' + fio_client['middle_name'];
+                                })
+                                    .then(ert => {
+                                      return res.json({success: true, msg: 'Successful Update ', type_t: mass.type_t, name_service:mass.name_service, name:mass.name, price:mass.price, fio_client:mass.fio_client, id_new_orders:mass._id});
+                                    })
+                              })
+                            })
+                          })
+                      })
+
                     });
                   });
                 })
